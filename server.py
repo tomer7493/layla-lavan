@@ -6,10 +6,10 @@ import database as db
 class Server:
     def __init__(self):
         self.server_socket=self.server_socket = socket.socket()
-        self.server_socket.bind(("0.0.0.0", 8820))
+        self.server_socket.bind(("127.0.0.1", 8820))
         self.server_socket.listen()
         self.riddle_counter = 1
-        self.group_id = 5 
+        self.group_id = "Id=5" 
         print("Server is up and running")
         (self.client_socket, self.client_address) = self.server_socket.accept()
         print("Client connected")
@@ -28,6 +28,7 @@ class Server:
             data = raw_data[2]
             #
             if cmd == "Start":
+                cmd = "NextTask"
                 data = self.db.get_answer_by_number_id(self.riddle_counter)[2]
                 
             elif cmd == "Answer":
@@ -35,7 +36,14 @@ class Server:
                 print("the db is: ",self.db.get_answer_by_number_id(self.riddle_counter)[1])
                 if (self.db.get_answer_by_number_id(self.riddle_counter)[1] == data):
                     self.riddle_counter+=1
-                    cmd = "NextTask"
+                    print(99999999999999,self.db.riddle_counter())
+                    if (self.db.riddle_counter()[0][0]==self.riddle_counter):
+                        cmd = "YouDidIt"
+                        #self.client_socket.close()
+                        self.server_socket.close()
+                        
+                    else:
+                        cmd = "NextTask"
                 else:
                     cmd = "TryAgain"    
                 data = self.db.get_answer_by_number_id(self.riddle_counter)[2]

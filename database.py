@@ -44,3 +44,18 @@ class riddle_db:
         conn.close()
         print("db sent: ",data[0])
         return data[0]
+    
+    def riddle_counter(self):
+        conn = sqlite3.connect(self.path)
+        cursor = conn.execute(f"SELECT * FROM {self.tablename} WHERE id=(SELECT MAX(id) from {self.tablename}) ")
+        # cursor = conn.execute(
+        #     f"SELECT * FROM {self.tablename} WHERE id = 'MAX(id)'")
+        data = cursor.fetchall()
+        conn.close()
+        print("max iddddddddddddddd: ",data)
+        return data
+        
+        #SELECT * 
+# WHERE id=MAX(id) 
+# FROM history;
+
